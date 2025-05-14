@@ -32,20 +32,23 @@ const userLoadSchema = Type.Object(
   { description: 'User data from external API' },
 )
 
-const defaultResponseMessageSchema = Type.Object({
-  loaded: Type.Number({ description: 'Number of users loaded' }),
-  message: Type.String({ description: 'Load process result message' }),
-})
+const defaultResponseMessageSchema = Type.Object(
+  {
+    loaded: Type.Number({ description: 'Number of users loaded' }),
+    message: Type.String({ description: 'Load process result message' }),
+  },
+  { description: 'Load process result' },
+)
 
 const userQueryStringSchema = Type.Object(
   {
     name: Type.Optional(Type.String({ minLength: 1, description: 'Filter by name' })),
     username: Type.Optional(Type.String({ minLength: 1, description: 'Filter by username' })),
     email: Type.Optional(Type.String({ minLength: 1, description: 'Filter by email' })),
-    phone: Type.Optional(Type.String({ minLength: 1, description: 'Filter by teléfono' })),
+    phone: Type.Optional(Type.String({ minLength: 1, description: 'Filter by phone' })),
     website: Type.Optional(Type.String({ minLength: 1, description: 'Filter by website' })),
   },
-  { description: 'Parámetros de búsqueda para usuarios' },
+  { description: 'User search parameters' },
 )
 
 // TYPES
