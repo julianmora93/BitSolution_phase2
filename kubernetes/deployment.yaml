@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${CI_PROJECT_NAME}-deployment
+  labels:
+    app: ${CI_PROJECT_NAME}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${CI_PROJECT_NAME}
+  template:
+    metadata:
+      labels:
+        app: ${CI_PROJECT_NAME}
+    spec:
+      containers:
+      - name: ${CI_PROJECT_NAME}
+        image: ${DOCKER_IMAGE_TAG}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            cpu: "300m"
+            memory: "800Mi"
+        envFrom:
+          - secretRef:
+              name: auth-secrets
+          - secretRef:
+              name: data-warehouse
+        env:
+          - name: REDIS_CONFIG
+            value: "${REDIS_CONFIG}"
+          - name: API_KEY
+            value: "${API_KEY}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ${CI_PROJECT_NAME}
+  name: ${CI_PROJECT_NAME}-service
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: ${CI_PROJECT_NAME}
+  type: ClusterIP
