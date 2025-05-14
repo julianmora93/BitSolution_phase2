@@ -5,17 +5,39 @@
 import { Static, Type } from '@sinclair/typebox'
 
 // SCHEMAS
-
-const demoSchema = Type.Object({
+const userLoadResponseSchema = Type.Object({
+  id: Type.Number(),
+  name: Type.String(),
+  username: Type.String(),
   email: Type.String(),
+  address: Type.Object({
+    street: Type.String(),
+    suite: Type.String(),
+    city: Type.String(),
+    zipcode: Type.String(),
+    geo: Type.Object({
+      lat: Type.String(),
+      lng: Type.String(),
+    }),
+  }),
+  phone: Type.String(),
+  website: Type.String(),
+  company: Type.Object({
+    name: Type.String(),
+    catchPhrase: Type.String(),
+    bs: Type.String(),
+  }),
 })
 
 // TYPES
-type DemoSchema = Static<typeof demoSchema>
+type UserLoadTypeResponseSchema = Static<typeof userLoadResponseSchema>
 
 export {
   // SCHEMAS
-  demoSchema,
+  userLoadResponseSchema,
+}
+
+export type {
   // TYPES
-  DemoSchema,
+  UserLoadTypeResponseSchema,
 }

@@ -9,7 +9,7 @@ import { FastifyPluginAsync } from 'fastify'
 import fastifySwaggerUi from '@fastify/swagger-ui'
 import { name, description, version } from '../../package.json'
 
-const swaggerPlugin: FastifyPluginAsync<AppOptions> = fp(async (fastify, opts) => {
+const swaggerPlugin: FastifyPluginAsync<AppOptions> = fp(async (fastify: any, opts: any) => {
   fastify.register(swagger, {
     swagger: {
       info: { title: name, description, version },

@@ -14,7 +14,7 @@ declare module 'fastify' {
   }
 }
 
-const axiosPlugin: FastifyPluginAsync<AppOptions> = fp(async (fastify, opts) => {
+const axiosPlugin: FastifyPluginAsync<AppOptions> = fp(async (fastify: any, opts: any) => {
   const { TEST_MODE, KAVE_HOME_BASE_URL } = opts
 
   if (TEST_MODE) return

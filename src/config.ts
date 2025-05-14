@@ -5,25 +5,28 @@
 import envSchema from 'env-schema'
 import { Static, Type } from '@sinclair/typebox'
 
-const SECOND = 1000
-const MINUTE = 60 * SECOND
-const HOUR = 60 * MINUTE
-
-
 // TODO: DEFINE HERE ALL THE ENV VARIABLES
-const schema = Type.Strict(
-  Type.Object({
-    // DATA WAREHOUSE CONFIG
-    DW_SERVER: Type.String(),
-    DW_DATABASE: Type.String(),
-    DW_USERNAME: Type.String(),
-    DW_PASSWORD: Type.String(),
-    DW_PORT: Type.Number({ default: 5432 }),
-    // GENERAL CONFIG
-    REDIS_CONFIG: Type.String({ default: '127.0.0.1:6379' }),
-    CACHE_TTL: Type.Number({ default: 1 * HOUR }),
-  })
-)
+const schema = Type.Object({
+  // OTHER
+  EXTERNAL_ENDPOINT: Type.String(),
+
+  // DATA WAREHOUSE CONFIG
+  DW_SERVER: Type.String(),
+  DW_DATABASE: Type.String(),
+  DW_USERNAME: Type.String(),
+  DW_PASSWORD: Type.String(),
+  DW_PORT: Type.Number({ default: 5432 }),
+  DW_SCHEMA: Type.String({ default: 'public' }),
+
+  // MAILHOG CONFIG
+  MAILHOG_HOST: Type.String({ default: 'localhost' }),
+  MAILHOG_SMTP_PORT: Type.Number({ default: 1025 }),
+  EMAIL_FROM: Type.String({ default: '"Microservice App" <noreply@example.com>' }),
+
+  // BULLMQ CONFIG
+  BULLMQ_QUEUE_NAME: Type.String({ default: 'email-notification' }),
+  BULLMQ_REDIS_URL: Type.String({ default: 'redis://localhost:6379' }),
+})
 
 type Env = Static<typeof schema>
 
@@ -32,4 +35,5 @@ const config = envSchema<Env>({
   schema,
 })
 
-export { config, Env }
+export { config }
+export type { Env }
