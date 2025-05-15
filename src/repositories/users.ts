@@ -13,9 +13,17 @@ const createManyUsers = async (prisma: PrismaClient, users: any[]) => {
   if (users.length === 0) return
   const values = users.map(
     (u) =>
-      Prisma.sql`(${u.id}, ${u.name}, ${u.username}, ${u.email}, ${u.phone}, ${u.website}, ${JSON.stringify(
-        u.address,
-      )}, ${JSON.stringify(u.company)})`,
+      Prisma.sql`(
+        ${u.id}, 
+        ${u.name}, 
+        ${u.username}, 
+        ${u.email}, 
+        ${u.phone}, 
+        ${u.website}, 
+        ${Prisma.sql`CAST(
+          ${JSON.stringify(u.address)} AS jsonb)`}, 
+        ${Prisma.sql`CAST(
+          ${JSON.stringify(u.company)} AS jsonb)`})`,
   )
   await prisma.$executeRaw(
     Prisma.sql`INSERT INTO users (id, name, username, email, phone, website, address, company) VALUES ${Prisma.join(

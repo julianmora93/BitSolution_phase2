@@ -24,8 +24,11 @@ const schema = Type.Object({
   EMAIL_FROM: Type.String({ default: '"Microservice App" <noreply@example.com>' }),
 
   // BULLMQ CONFIG
-  BULLMQ_QUEUE_NAME: Type.String({ default: 'email-notification' }),
-  BULLMQ_REDIS_URL: Type.String({ default: 'redis://localhost:6379' }),
+  BULLMQ_QUEUE_NAME: Type.String({ default: 'postNotification' }),
+  BULLMQ_REDIS_URL: Type.String({ default: 'redis://localhost:6379/0' }),
+  BULLMQ_REDIS_NAME_SPACE: Type.String({ default: 'phase2' }),
+
+  JOB_NAME: Type.String({ default: 'jobPostNotification' }),
 })
 
 type Env = Static<typeof schema>

@@ -5,10 +5,11 @@
 import { config } from '../config'
 import { AppOptions } from '../app'
 import { FastifyPluginAsync } from 'fastify'
-import { defaultResponseMessageSchema, userLoadSchema, UserLoadSchema, userQueryStringSchema } from '../schemas'
+import { userLoadSchema, UserLoadSchema, userQueryStringSchema } from '../schemas/user'
 import { createManyUsers, findUsers, getExistingUsers } from '../repositories/users'
+import { defaultResponseMessageSchema } from '../schemas/default-response'
 
-const index: FastifyPluginAsync<AppOptions> = async (fastify, _opts): Promise<void> => {
+const user: FastifyPluginAsync<AppOptions> = async (fastify, _opts): Promise<void> => {
   const ENTITY_NAME = 'Users'
 
   fastify.route({
@@ -16,22 +17,18 @@ const index: FastifyPluginAsync<AppOptions> = async (fastify, _opts): Promise<vo
     url: '/users/load',
     handler: async (req, reply) => {
       try {
-        // get user data from external API
         const { data: users } = await fastify.axios.get<UserLoadSchema[]>(`${config.EXTERNAL_ENDPOINT}/users`)
 
-        // get existing users
         const existingUsers = await getExistingUsers(fastify.prisma)
 
         const existingIds = new Set(existingUsers.map((u) => u.id))
         const existingEmails = new Set(existingUsers.map((u) => u.email))
         const existingUsernames = new Set(existingUsers.map((u) => u.username))
 
-        // filter only new users
         const newUsers = users.filter(
           (u) => !existingIds.has(u.id) && !existingEmails.has(u.email) && !existingUsernames.has(u.username),
         )
 
-        // Insert new users
         if (newUsers.length > 0) {
           await createManyUsers(
             fastify.prisma,
@@ -58,7 +55,11 @@ const index: FastifyPluginAsync<AppOptions> = async (fastify, _opts): Promise<vo
       tags: [ENTITY_NAME],
       summary: 'Loads users from an external API and saves them to the database.',
       response: {
-        200: defaultResponseMessageSchema,
+        200: defaultResponseMessageSchema(
+          'Load process result',
+          'Load process result message',
+          'Number of users loaded',
+        ),
       },
     },
   })
@@ -89,4 +90,4 @@ const index: FastifyPluginAsync<AppOptions> = async (fastify, _opts): Promise<vo
   })
 }
 
-export default index
+export default user

@@ -35,7 +35,6 @@ const prismaPlugin: FastifyPluginAsync<AppOptions> = fp(async (fastify: any, opt
 
   await prisma.$connect()
 
-  // Make Prisma Client available through the fastify fastify instance: fastify.prisma
   fastify.decorate('prisma', prisma)
 
   fastify.addHook('onClose', async (fastify: any) => {

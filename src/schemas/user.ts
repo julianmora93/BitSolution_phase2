@@ -32,14 +32,6 @@ const userLoadSchema = Type.Object(
   { description: 'User data from external API' },
 )
 
-const defaultResponseMessageSchema = Type.Object(
-  {
-    loaded: Type.Number({ description: 'Number of users loaded' }),
-    message: Type.String({ description: 'Load process result message' }),
-  },
-  { description: 'Load process result' },
-)
-
 const userQueryStringSchema = Type.Object(
   {
     name: Type.Optional(Type.String({ minLength: 1, description: 'Filter by name' })),
@@ -55,13 +47,10 @@ const userQueryStringSchema = Type.Object(
 type UserLoadSchema = Static<typeof userLoadSchema>
 
 export {
-  // SCHEMAS
   userLoadSchema,
-  defaultResponseMessageSchema,
   userQueryStringSchema,
 }
 
 export type {
-  // TYPES
   UserLoadSchema,
 }
