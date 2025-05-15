@@ -2,7 +2,7 @@
  * Copyright (c) 2023 Bit Solution Group
  */
 
-export interface UserEntity {
+export type UserEntity = {
   id: number
   name: string
   username: string
@@ -24,4 +24,10 @@ export interface UserEntity {
     catchPhrase: string
     bs: string
   }
+}
+
+export type ExistingUserEntity = {
+  id: number
+  email: string
+  username: string
 }
