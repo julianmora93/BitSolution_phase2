@@ -64,11 +64,11 @@ const notification: FastifyPluginAsync<AppOptions> = async (fastify, opts): Prom
       try {
         const enqueueService = new EnqueueService(queueInstance)
         const messageWaitingCount = await enqueueService.getCountWaitingMessages()
-        if(messageWaitingCount === 0) {
+        if (messageWaitingCount === 0) {
           reply.send({ processCount: 0, message: 'The queue is already empty.' })
           return
         }
-        await queueInstance.obliterate({ force: true });
+        await queueInstance.obliterate({ force: true })
         reply.send({ processCount: messageWaitingCount, message: 'All messages deleted; the queue is now empty.' })
       } catch (err: any) {
         const { code, message } = fastify.customErrorHandler(err, ENTITY_NAME, '')
@@ -77,13 +77,13 @@ const notification: FastifyPluginAsync<AppOptions> = async (fastify, opts): Prom
     },
     schema: {
       tags: [ENTITY_NAME],
-      summary: 'Simulate publishing posts and enqueue notifications for users.',
+      summary: 'Remove all messages from the postNotification queue.',
       response: {
         200: defaultResponseSchema(
           'Notification process result',
           'Persistence result message for pending notifications',
           'Registered notification count',
-          'Notifications'
+          'Notifications',
         ),
       },
     },
