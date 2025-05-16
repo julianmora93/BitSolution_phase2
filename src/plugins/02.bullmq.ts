@@ -9,7 +9,7 @@ import { Queue } from 'bullmq'
 
 declare module 'fastify' {
   interface FastifyInstance {
-    bullmq: Queue;
+    bullmq: Queue
   }
 }
 

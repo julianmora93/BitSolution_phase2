@@ -7,7 +7,7 @@ import { AppOptions } from '../app'
 import { FastifyPluginAsync } from 'fastify'
 import { userLoadSchema, UserLoadSchema, userQueryStringSchema } from '../schemas/user'
 import { createManyUsers, findUsers, getExistingUsers } from '../repositories/users'
-import { defaultResponseMessageSchema } from '../schemas/default-response'
+import { defaultResponseSchema } from '../schemas/default-response'
 
 const user: FastifyPluginAsync<AppOptions> = async (fastify, _opts): Promise<void> => {
   const ENTITY_NAME = 'Users'
@@ -36,7 +36,9 @@ const user: FastifyPluginAsync<AppOptions> = async (fastify, _opts): Promise<voi
               id: u.id,
               name: u.name,
               username: u.username,
-              email: u.email,
+              // email: u.email,
+              // email: `${u.username.toLowerCase()}@yopmail.com`,
+              email: `user_bitsolution_test_${u.id}@yopmail.com`,
               phone: u.phone,
               website: u.website,
               address: u.address,
@@ -45,7 +47,7 @@ const user: FastifyPluginAsync<AppOptions> = async (fastify, _opts): Promise<voi
           )
         }
 
-        reply.send({ loaded: newUsers.length, message: 'Users loaded successfully.' })
+        reply.send({ processCount: newUsers.length, message: 'Users loaded successfully.', data: users })
       } catch (err) {
         const { code, message } = fastify.customErrorHandler(err, ENTITY_NAME, '')
         reply.code(code).send(message)
@@ -55,11 +57,7 @@ const user: FastifyPluginAsync<AppOptions> = async (fastify, _opts): Promise<voi
       tags: [ENTITY_NAME],
       summary: 'Loads users from an external API and saves them to the database.',
       response: {
-        200: defaultResponseMessageSchema(
-          'Load process result',
-          'Load process result message',
-          'Number of users loaded',
-        ),
+        200: defaultResponseSchema('Load process result', 'Load process result message', 'Number of users loaded'),
       },
     },
   })

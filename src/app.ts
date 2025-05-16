@@ -13,18 +13,15 @@ export type AppOptions = {
   Env
 
 export const app = async (opts: AppOptions = { ...config, TEST_MODE: false }): Promise<FastifyInstance> => {
-  const app = fastify({ logger: true })
+  // const app = fastify({ logger: true })
+  const app = fastify()
 
-  // This loads all plugins defined in plugins
-  // those should be support plugins that are reused
-  // through your application
   void app.register(AutoLoad, {
     dir: join(__dirname, 'plugins'),
     options: Object.assign({}, opts),
   })
   app.swagger
-  // This loads all plugins defined in routes
-  // define your routes in one of these
+
   void app.register(AutoLoad, {
     dir: join(__dirname, 'routes'),
     options: Object.assign({}, opts),

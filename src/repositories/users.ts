@@ -65,4 +65,21 @@ const findUsers = async (
   )
 }
 
-export { getExistingUsers, createManyUsers, findUsers }
+const getUserById = async (prisma: PrismaClient, id: number) => {
+  const user = await prisma.$queryRaw<any>(
+    Prisma.sql`SELECT 
+        id, 
+        name, 
+        username, 
+        email, 
+        phone, 
+        website, 
+        address, 
+        company 
+      FROM users WHERE id = ${id} LIMIT 1`,
+  )
+  if (user && user.length === 0) return null
+  return user[0]
+}
+
+export { getExistingUsers, createManyUsers, findUsers, getUserById }

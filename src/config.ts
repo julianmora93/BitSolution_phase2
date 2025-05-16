@@ -28,7 +28,8 @@ const schema = Type.Object({
   BULLMQ_REDIS_URL: Type.String({ default: 'redis://localhost:6379/0' }),
   BULLMQ_REDIS_NAME_SPACE: Type.String({ default: 'phase2' }),
 
-  JOB_NAME: Type.String({ default: 'jobPostNotification' }),
+  WORKER_NAME: Type.String({ default: 'workerNotification' }),
+  WORKER_CONCURRENCY_MINUTES: Type.Number({ default: 1 }),
 })
 
 type Env = Static<typeof schema>
