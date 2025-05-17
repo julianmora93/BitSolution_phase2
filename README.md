@@ -11,6 +11,7 @@
 - [Problem Solving](#problem-solving)
 - [Deployment](#deployment)
 - [Getting Started](#getting-started)
+- [Bonus](#bonus)
 
 ## Overview
 
@@ -158,3 +159,10 @@ docker exec -it db-bitsolution bash
 2. **Build the Project**: Use `npm run build` to compile the TypeScript code.
 3. **Run the Application**: Start the server with `npm start`.
 4. **Run the Application in Dev**: Execute dev mode using `npm run dev`.
+
+
+## Bonus
+
+- **This is a simple diagram implementing retry logic. It should work.**
+
+![Diagram](https://github.com/user-attachments/assets/c280d901-a2a6-4e9a-a43d-d691ffaaad2c)
