@@ -6,5 +6,5 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   },
-  "include": ["src/**/*.ts", "src/plugins/cron.ts"]
+  "include": ["src/**/*.ts"]
 }

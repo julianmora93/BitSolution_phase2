@@ -22,11 +22,11 @@ declare module 'fastify' {
 }
 
 const redisPlugin: FastifyPluginAsync<AppOptions> = fp(async (fastify: any, options: any) => {
-  const { TEST_MODE, BULLMQ_REDIS_URL, BULLMQ_REDIS_NAME_SPACE } = options
+  const { TEST_MODE, BULLMQ_QUEUE_HOST, BULLMQ_QUEUE_PORT, BULLMQ_REDIS_NAME_SPACE } = options
 
   if (TEST_MODE) return
 
-  const store = new KeyvRedis(BULLMQ_REDIS_URL)
+  const store = new KeyvRedis(`redis://${BULLMQ_QUEUE_HOST}:${BULLMQ_QUEUE_PORT}/0`)
   const cache = new Keyv({
     store,
     namespace: BULLMQ_REDIS_NAME_SPACE,
@@ -51,8 +51,6 @@ const redisPlugin: FastifyPluginAsync<AppOptions> = fp(async (fastify: any, opti
     }
   })
 })
-
-// export default redisPlugin
 
 export default fp(redisPlugin, {
   name: 'redis-plugin',

@@ -41,4 +41,5 @@ const prismaPlugin: FastifyPluginAsync<AppOptions> = fp(async (fastify: any, opt
     await fastify.prisma.$disconnect()
   })
 })
+
 export default prismaPlugin

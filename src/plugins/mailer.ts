@@ -35,7 +35,6 @@ const mailerPlugin: FastifyPluginAsync<AppOptions> = fp(async (fastify: any, opt
     },
   })
 
-  // fastify.decorate('mailer', fastifyMailer);
 })
 
 export default mailerPlugin

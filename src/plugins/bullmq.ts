@@ -31,7 +31,6 @@ const bullmqPlugin: FastifyPluginAsync<AppOptions> = fp(async (fastify: any, opt
         delay: 1000,
       },
       removeOnComplete: true,
-      removeOnFail: { count: 1000 },
     },
   })
 

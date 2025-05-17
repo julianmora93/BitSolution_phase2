@@ -25,7 +25,8 @@ const schema = Type.Object({
 
   // BULLMQ CONFIG
   BULLMQ_QUEUE_NAME: Type.String({ default: 'postNotification' }),
-  BULLMQ_REDIS_URL: Type.String({ default: 'redis://localhost:6379/0' }),
+  BULLMQ_QUEUE_HOST: Type.String({ default: 'localhost' }),
+  BULLMQ_QUEUE_PORT: Type.Number({ default: 6379 }),
   BULLMQ_REDIS_NAME_SPACE: Type.String({ default: 'phase2' }),
 
   WORKER_NAME: Type.String({ default: 'workerNotification' }),
