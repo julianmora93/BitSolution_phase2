@@ -4,13 +4,8 @@
 
 import { Prisma, PrismaClient } from '@prisma/client'
 import { Sql } from '@prisma/client/runtime'
-import { ExistingUserEntity } from '../interfaces'
 
-const getExistingUsers = async (prisma: PrismaClient): Promise<ExistingUserEntity[]> =>
-  prisma.$queryRaw<ExistingUserEntity[]>(Prisma.sql`SELECT id, email, username FROM users`)
-
-const createManyUsers = async (prisma: PrismaClient, users: any[]) => {
-  if (users.length === 0) return
+const upsertManyUsers = async (prisma: PrismaClient, users: any[]) => {
   const values = users.map(
     (u) =>
       Prisma.sql`(
@@ -26,9 +21,20 @@ const createManyUsers = async (prisma: PrismaClient, users: any[]) => {
           ${JSON.stringify(u.company)} AS jsonb)`})`,
   )
   await prisma.$executeRaw(
-    Prisma.sql`INSERT INTO users (id, name, username, email, phone, website, address, company) VALUES ${Prisma.join(
-      values,
-    )} ON CONFLICT (id) DO NOTHING`,
+    Prisma.sql`
+      INSERT INTO users
+        (id, name, username, email, phone, website, address, company)
+      VALUES
+        ${Prisma.join(values)}
+      ON CONFLICT (id) DO UPDATE SET
+        name = EXCLUDED.name,
+        username = EXCLUDED.username,
+        email = EXCLUDED.email,
+        phone = EXCLUDED.phone,
+        website = EXCLUDED.website,
+        address = EXCLUDED.address,
+        company = EXCLUDED.company
+    `,
   )
 }
 
@@ -82,4 +88,4 @@ const getUserById = async (prisma: PrismaClient, id: number) => {
   return user[0]
 }
 
-export { getExistingUsers, createManyUsers, findUsers, getUserById }
+export { upsertManyUsers, findUsers, getUserById }

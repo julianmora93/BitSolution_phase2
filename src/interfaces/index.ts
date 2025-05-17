@@ -26,12 +26,6 @@ export type UserEntity = {
   }
 }
 
-export type ExistingUserEntity = {
-  id: number
-  email: string
-  username: string
-}
-
 export type PostNotification = {
   userId: number
   postId: number

@@ -46,4 +46,6 @@ const bullmqPlugin: FastifyPluginAsync<AppOptions> = fp(async (fastify: any, opt
   })
 })
 
-export default bullmqPlugin
+export default fp(bullmqPlugin, {
+  dependencies: ['redis-plugin']
+})

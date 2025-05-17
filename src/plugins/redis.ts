@@ -21,7 +21,7 @@ declare module 'fastify' {
   }
 }
 
-const redis: FastifyPluginAsync<AppOptions> = fp(async (fastify: any, options: any) => {
+const redisPlugin: FastifyPluginAsync<AppOptions> = fp(async (fastify: any, options: any) => {
   const { TEST_MODE, BULLMQ_REDIS_URL, BULLMQ_REDIS_NAME_SPACE } = options
 
   if (TEST_MODE) return
@@ -52,4 +52,8 @@ const redis: FastifyPluginAsync<AppOptions> = fp(async (fastify: any, options: a
   })
 })
 
-export default redis
+// export default redisPlugin
+
+export default fp(redisPlugin, {
+  name: 'redis-plugin',
+})

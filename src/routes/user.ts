@@ -6,7 +6,7 @@ import { config } from '../config'
 import { AppOptions } from '../app'
 import { FastifyPluginAsync } from 'fastify'
 import { userLoadSchema, UserLoadSchema, userQueryStringSchema } from '../schemas/user'
-import { createManyUsers, findUsers, getExistingUsers } from '../repositories/users'
+import { upsertManyUsers, findUsers } from '../repositories/users'
 import { defaultResponseSchema } from '../schemas/default-response'
 
 const user: FastifyPluginAsync<AppOptions> = async (fastify, _opts): Promise<void> => {
@@ -18,36 +18,28 @@ const user: FastifyPluginAsync<AppOptions> = async (fastify, _opts): Promise<voi
     handler: async (req, reply) => {
       try {
         const { data: users } = await fastify.axios.get<UserLoadSchema[]>(`${config.EXTERNAL_ENDPOINT}/users`)
-
-        const existingUsers = await getExistingUsers(fastify.prisma)
-
-        const existingIds = new Set(existingUsers.map((u) => u.id))
-        const existingEmails = new Set(existingUsers.map((u) => u.email))
-        const existingUsernames = new Set(existingUsers.map((u) => u.username))
-
-        const newUsers = users.filter(
-          (u) => !existingIds.has(u.id) && !existingEmails.has(u.email) && !existingUsernames.has(u.username),
-        )
-
-        if (newUsers.length > 0) {
-          await createManyUsers(
-            fastify.prisma,
-            newUsers.map((u) => ({
-              id: u.id,
-              name: u.name,
-              username: u.username,
-              // email: u.email,
-              // email: `${u.username.toLowerCase()}@yopmail.com`,
-              email: `user_bitsolution_test_${u.id}@yopmail.com`,
-              phone: u.phone,
-              website: u.website,
-              address: u.address,
-              company: u.company,
-            })),
+        if (!users || users.length === 0) {
+          throw fastify.customErrorHandler(
+            { code: 400, message: 'No users found in the external API.' },
+            ENTITY_NAME,
+            '',
           )
         }
-
-        reply.send({ processCount: newUsers.length, message: 'Users loaded successfully.', data: users })
+        await upsertManyUsers(
+          fastify.prisma,
+          users.map((u) => ({
+            id: u.id,
+            name: u.name,
+            username: u.username,
+            // email: u.email,
+            email: `user_bitsolution_test_${u.id}@yopmail.com`,
+            phone: u.phone,
+            website: u.website,
+            address: u.address,
+            company: u.company,
+          })),
+        )
+        reply.send({ processCount: users.length, message: 'Users loaded successfully.', data: users })
       } catch (err) {
         const { code, message } = fastify.customErrorHandler(err, ENTITY_NAME, '')
         reply.code(code).send(message)
